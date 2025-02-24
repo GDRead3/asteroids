@@ -12,6 +12,10 @@ def main():
     print (f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+
+    game_clock = pygame.time.Clock()
+    dt = 0
+
     #basic Game loop
     while True:
         #quit option - makes close window button work
@@ -25,6 +29,9 @@ def main():
 
         #refresh screen
         pygame.display.flip()
+
+        #tick count
+        dt = game_clock.tick(60)/1000
 
 if __name__ == "__main__":
     main()
