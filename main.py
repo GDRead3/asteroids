@@ -3,6 +3,7 @@
 # throughout this file
 import pygame
 from constants import *
+from player import Player
 
 def main():
     if pygame.get_init() == False:
@@ -11,6 +12,9 @@ def main():
     print (f"Screen width: {SCREEN_WIDTH}")
     print (f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    
+    #create player
+    player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
 
     game_clock = pygame.time.Clock()
@@ -25,6 +29,9 @@ def main():
 
         #fill Screen
         screen.fill("black")
+
+        #draw player
+        player.draw(screen)
 
 
         #refresh screen
