@@ -12,6 +12,13 @@ def main():
     print (f"Screen width: {SCREEN_WIDTH}")
     print (f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    #create groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    
+    #set groups as container for player
+    Player.containers = (updatable, drawable)
     
     #create player
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -31,10 +38,12 @@ def main():
         screen.fill("black")
 
         #draw player
-        player.draw(screen)
+        #player.draw(screen)
+        for thing in drawable:
+            thing.draw(screen)
 
         #update player
-        player.update(dt)
+        updatable.update(dt)
 
 
         #refresh screen
