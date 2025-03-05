@@ -5,6 +5,7 @@ import pygame
 from constants import *
 from player import Player
 from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     if pygame.get_init() == False:
@@ -25,9 +26,14 @@ def main():
     #set group as container for asteroids
     Asteroid.containers = (asteroids, updatable, drawable)
     
+    #set group as container for asteroid field (only updatable, not drawable)
+    AsteroidField.containers = (updatable,)
+    
     #create player
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
+    #create asteroid field
+    asteroid_field = AsteroidField()
 
     game_clock = pygame.time.Clock()
     dt = 0
