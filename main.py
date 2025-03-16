@@ -16,6 +16,10 @@ def main():
     print (f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    # Initialize score
+    score = 0
+    font = pygame.font.Font(None, 36)
+
     #create groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -66,13 +70,17 @@ def main():
                 if asteroid.collides_with(shot):
                     asteroid.split()
                     shot.kill()
+                    # Add points based on asteroid size
+                    score += int(100 * (asteroid.radius / ASTEROID_MAX_RADIUS))
 
         #draw player
         #player.draw(screen)
         for thing in drawable:
             thing.draw(screen)
 
-
+        # Draw score
+        score_text = font.render(f'Score: {score}', True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
 
         #refresh screen
         pygame.display.flip()
