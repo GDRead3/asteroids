@@ -8,14 +8,43 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 
-def main():
-    if pygame.get_init() == False:
-        pygame.init()
-    print ("Starting Asteroids!")
-    print (f"Screen width: {SCREEN_WIDTH}")
-    print (f"Screen height: {SCREEN_HEIGHT}")
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+def draw_menu(screen, font, title, options, selected_option):
+    # Clear screen
+    screen.fill("black")
+    
+    # Draw title
+    title_text = font.render(title, True, "white")
+    title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/3))
+    screen.blit(title_text, title_rect)
+    
+    # Draw options
+    for i, option in enumerate(options):
+        color = "yellow" if i == selected_option else "white"
+        option_text = font.render(option, True, color)
+        option_rect = option_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + i * 50))
+        screen.blit(option_text, option_rect)
 
+def menu_loop(screen):
+    font = pygame.font.Font(None, 64)
+    options = ["Start Game", "Quit"]
+    selected_option = 0
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_option = (selected_option - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected_option = (selected_option + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    return options[selected_option].lower().replace(" ", "_")
+        
+        draw_menu(screen, font, "ASTEROIDS", options, selected_option)
+        pygame.display.flip()
+
+def game_loop(screen):
     # Initialize score
     score = 0
     font = pygame.font.Font(None, 36)
@@ -52,9 +81,8 @@ def main():
         #quit option - makes close window button work
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                return "quit"
 
-        #fill Screen
         screen.fill("black")
 
         #update player
@@ -63,8 +91,7 @@ def main():
         #collision check
         for asteroid in asteroids:
             if player.collides_with(asteroid):
-                print ("Game Over!")
-                return #this exits the game
+                return "game_over", score
         for asteroid in asteroids:
             for shot in shots:
                 if asteroid.collides_with(shot):
@@ -82,11 +109,54 @@ def main():
         score_text = font.render(f'Score: {score}', True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
 
-        #refresh screen
+        pygame.display.flip()
+        dt = game_clock.tick(60)/1000
+
+def game_over_screen(screen, score):
+    font = pygame.font.Font(None, 64)
+    options = ["Play Again", "Quit"]
+    selected_option = 0
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_option = (selected_option - 1) % len(options)
+                elif event.key == pygame.K_DOWN:
+                    selected_option = (selected_option + 1) % len(options)
+                elif event.key == pygame.K_RETURN:
+                    return options[selected_option].lower().replace(" ", "_")
+        
+        draw_menu(screen, font, f"Game Over!\nScore: {score}", options, selected_option)
         pygame.display.flip()
 
-        #tick count
-        dt = game_clock.tick(60)/1000
+def main():
+    if pygame.get_init() == False:
+        pygame.init()
+    print("Starting Asteroids!")
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    
+    while True:
+        # Show main menu
+        action = menu_loop(screen)
+        if action == "quit":
+            break
+        elif action == "start_game":
+            # Start the game
+            result = game_loop(screen)
+            if result == "quit":
+                break
+            elif isinstance(result, tuple):  # Game over with score
+                _, score = result
+                action = game_over_screen(screen, score)
+                if action == "quit":
+                    break
+                elif action == "play_again":
+                    continue
+
+    pygame.quit()
 
 if __name__ == "__main__":
     main()
