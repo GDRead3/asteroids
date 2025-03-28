@@ -44,7 +44,7 @@ This is a recreation of the classic Asteroids arcade game where players control 
 
 ## ToDo List
 
-- [ ] Add game states (menu, playing, game over)
+- [x] Add game states (menu, playing, game over)
 - [ ] Implement score tracking
 - [ ] Add lives system for the player
 - [ ] Create visual effects (explosions, thruster particles)
@@ -56,7 +56,6 @@ This is a recreation of the classic Asteroids arcade game where players control 
 - [ ] Implement difficulty progression (increasing asteroid speed/frequency)
 - [ ] Add UFO enemies that shoot at the player
 - [ ] Create a pause feature
-- [ ] Add controller support
 - [ ] Implement a tutorial or help screen
 - [ ] Add visual polish (better graphics, animations)
 
